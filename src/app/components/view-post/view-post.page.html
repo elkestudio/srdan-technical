@@ -1,0 +1,61 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button
+        [text]="getBackButtonText()"
+        defaultHref="/"
+      ></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+@if (post) {
+  <ion-content [fullscreen]="true">
+    <ion-item>
+      <ion-icon
+        aria-hidden="true"
+        name="person-circle"
+        color="primary"
+      ></ion-icon>
+      <ion-label class="ion-text-wrap">
+        <h2>
+          User {{ post.userId }}
+          <span class="date">
+            <ion-note>Post #{{ post.id }}</ion-note>
+          </span>
+        </h2>
+        <h3>From: <ion-note>JSONPlaceholder API</ion-note></h3>
+      </ion-label>
+    </ion-item>
+    <div class="ion-padding">
+      <h1>{{ post.title }}</h1>
+      <p>
+        {{ post.body }}
+      </p>
+    </div>
+  </ion-content>
+}
+
+<ion-footer>
+  <ion-tab-bar>
+    <ion-tab-button (click)="navigateTo('home')" [class.selected]="isCurrentPage('home')">
+      <ion-icon name="home"></ion-icon>
+      <ion-label>Home</ion-label>
+    </ion-tab-button>
+    
+    <ion-tab-button (click)="navigateTo('camera')" [class.selected]="isCurrentPage('camera')">
+      <ion-icon name="camera"></ion-icon>
+      <ion-label>Camera</ion-label>
+    </ion-tab-button>
+    
+    <ion-tab-button (click)="navigateTo('plugin')" [class.selected]="isCurrentPage('plugin')">
+      <ion-icon name="extension-puzzle"></ion-icon>
+      <ion-label>Plugin</ion-label>
+    </ion-tab-button>
+    
+    <ion-tab-button (click)="navigateTo('design')" [class.selected]="isCurrentPage('design')">
+      <ion-icon name="color-palette"></ion-icon>
+      <ion-label>Design</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-footer>

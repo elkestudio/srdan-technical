@@ -1,0 +1,99 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>REST API Task</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="forceRefresh()">
+        <ion-icon name="refresh" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" (click)="showCacheInfo()">
+        <ion-icon name="information-circle" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">REST API Task</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="ion-padding">
+    <!-- Connection Status -->
+    <div class="status-card">
+      <ion-card>
+        <ion-card-content>
+          <div class="status-info">
+            <ion-icon 
+              [name]="isOnline ? 'wifi' : 'wifi-outline'" 
+              [color]="isOnline ? 'success' : 'danger'">
+            </ion-icon>
+            <span>{{ isOnline ? 'Online' : 'Offline' }} - {{ dataSource }}</span>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- API Task Description -->
+    <h2>JSONPlaceholder API Posts</h2>
+    
+    <ion-list>
+      @for (post of getPosts(); track post.id) {
+        <ion-item>
+          <ion-icon name="document-text" slot="start" color="primary"></ion-icon>
+          <ion-label>
+            <h3>{{ post.title }}</h3>
+            <p>{{ post.body }}</p>
+            <p class="post-meta">User ID: {{ post.userId }} | Post ID: {{ post.id }}</p>
+          </ion-label>
+          <ion-note slot="end" color="medium">
+            #{{ post.id }}
+          </ion-note>
+        </ion-item>
+      }
+    </ion-list>
+
+    <!-- Pagination Controls -->
+    <div class="pagination-controls">
+      <ion-button 
+        fill="outline" 
+        [disabled]="currentPage === 1 || isLoading" 
+        (click)="previousPage()">
+        <ion-icon name="chevron-back" slot="start"></ion-icon>
+        Previous
+      </ion-button>
+      
+      <span class="page-indicator">
+        Page {{ currentPage }} (5 posts per page)
+      </span>
+      
+      <ion-button 
+        fill="outline" 
+        [disabled]="isLoading" 
+        (click)="nextPage()">
+        Next
+        <ion-icon name="chevron-forward" slot="end"></ion-icon>
+      </ion-button>
+    </div>
+
+    <!-- Offline Controls -->
+    <div class="offline-controls">
+      <ion-button expand="block" fill="outline" (click)="clearCache()">
+        <ion-icon name="trash" slot="start"></ion-icon>
+        Clear Cache
+      </ion-button>
+    </div>
+
+    @if (isLoading) {
+      <div class="loading-container">
+        <ion-spinner></ion-spinner>
+        <p>{{ isOnline ? 'Loading posts from API...' : 'Loading cached posts...' }}</p>
+      </div>
+    }
+  </div>
+</ion-content>

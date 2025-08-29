@@ -1,0 +1,278 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>QR Code Scanner</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">QR Scanner</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  
+  <div class="ion-padding">
+    <!-- Scanner Section -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="qr-code" slot="start"></ion-icon>
+          QR Code Scanner
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p>Scan a QR code or take a photo to detect and process various types of content.</p>
+        
+        <!-- Action Buttons -->
+        <div class="scanner-buttons">
+          <ion-button expand="block" fill="solid" (click)="takePictureAndScan()" [disabled]="isScanning()">
+            <ion-icon name="camera" slot="start"></ion-icon>
+            Take Photo & Scan
+          </ion-button>
+          
+          @if (!isScanning()) {
+            <ion-button expand="block" fill="outline" (click)="scanQRFromCamera()">
+              <ion-icon name="qr-code" slot="start"></ion-icon>
+              Live QR Scan
+            </ion-button>
+          } @else {
+            <ion-button expand="block" fill="outline" color="danger" (click)="stopScanning()">
+              <ion-icon name="stop-circle" slot="start"></ion-icon>
+              Stop Scanning
+            </ion-button>
+          }
+        </div>
+        
+        <!-- Live Camera Feed for QR Scanning -->
+        <div class="camera-container" [class.hidden]="!isScanning()">
+          <video #qrVideo class="qr-video" autoplay playsinline></video>
+        </div>
+        
+        <!-- Loading State -->
+        @if (isScanning()) {
+          <div class="scanning-animation">
+            <ion-spinner></ion-spinner>
+            <p>Scanning QR code...</p>
+          </div>
+        }
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Captured Image Display -->
+    @if (capturedImage && !isScanning()) {
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Captured Image</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="image-container">
+            <img [src]="capturedImage" alt="Captured QR Code" />
+          </div>
+        </ion-card-content>
+      </ion-card>
+    }
+
+    <!-- QR Content Display -->
+    @if (qrContentInfo && !isScanning()) {
+
+      <!-- Content-specific display -->
+      @switch (qrContentInfo.type) {
+        <!-- Serbian Banking Payment -->
+        @case ('serbian_payment') {
+          @if (qrData) {
+            <ion-card class="payment-card">
+              <ion-card-header>
+                <ion-card-title>
+                  <ion-icon name="checkmark-circle" color="success" slot="start"></ion-icon>
+                  Payment Information
+                </ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <!-- Payment Details Form - Serbian Banking Format -->
+                @for (field of getQRFields(); track field.key) {
+                  <ion-item>
+                    <ion-label position="stacked">{{ field.label }}</ion-label>
+                    <ion-input [value]="field.getValue(qrData!)" readonly>
+                      <ion-icon [name]="field.icon" slot="start"></ion-icon>
+                    </ion-input>
+                  </ion-item>
+                }
+                
+                <!-- Payment Action -->
+                <div class="payment-actions">
+                  <ion-button expand="block" color="success" (click)="proceedWithPayment()">
+                    <ion-icon name="checkmark-circle" slot="start"></ion-icon>
+                    Proceed with Payment
+                  </ion-button>
+                  
+                  <ion-button expand="block" fill="outline" (click)="resetScan()">
+                    Scan Another QR Code
+                  </ion-button>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          }
+        }
+
+        <!-- URL Content -->
+        @case ('url') {
+          <ion-card class="url-card">
+            <ion-card-header>
+              <ion-card-title>
+                <ion-icon name="globe" color="primary" slot="start"></ion-icon>
+                Website Link
+              </ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-item>
+                <ion-label position="stacked">URL</ion-label>
+                <ion-input [value]="qrContentInfo.displayData?.url" readonly></ion-input>
+              </ion-item>
+              <div class="content-actions">
+                <ion-button expand="block" color="primary" (click)="openURL(qrContentInfo.displayData?.url)">
+                  <ion-icon name="open" slot="start"></ion-icon>
+                  Open Link
+                </ion-button>
+                <ion-button expand="block" fill="outline" (click)="resetScan()">
+                  Scan Another QR Code
+                </ion-button>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        }
+
+        <!-- Email Content -->
+        @case ('email') {
+          <ion-card class="email-card">
+            <ion-card-header>
+              <ion-card-title>
+                <ion-icon name="mail" color="primary" slot="start"></ion-icon>
+                Email Address
+              </ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-item>
+                <ion-label position="stacked">Email</ion-label>
+                <ion-input [value]="qrContentInfo.displayData?.email || rawQRContent" readonly></ion-input>
+              </ion-item>
+              <div class="content-actions">
+                <ion-button expand="block" color="primary" (click)="sendEmail(qrContentInfo.displayData?.email || rawQRContent)">
+                  <ion-icon name="mail" slot="start"></ion-icon>
+                  Send Email
+                </ion-button>
+                <ion-button expand="block" fill="outline" (click)="resetScan()">
+                  Scan Another QR Code
+                </ion-button>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        }
+
+        <!-- Phone Content -->
+        @case ('phone') {
+          <ion-card class="phone-card">
+            <ion-card-header>
+              <ion-card-title>
+                <ion-icon name="call" color="primary" slot="start"></ion-icon>
+                Phone Number
+              </ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-item>
+                <ion-label position="stacked">Phone</ion-label>
+                <ion-input [value]="qrContentInfo.displayData?.phone || rawQRContent" readonly></ion-input>
+              </ion-item>
+              <div class="content-actions">
+                <ion-button expand="block" color="primary" (click)="callPhone(qrContentInfo.displayData?.phone || rawQRContent)">
+                  <ion-icon name="call" slot="start"></ion-icon>
+                  Call Number
+                </ion-button>
+                <ion-button expand="block" fill="outline" (click)="resetScan()">
+                  Scan Another QR Code
+                </ion-button>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        }
+
+        <!-- WiFi Content -->
+        @case ('wifi') {
+          <ion-card class="wifi-card">
+            <ion-card-header>
+              <ion-card-title>
+                <ion-icon name="wifi" color="primary" slot="start"></ion-icon>
+                WiFi Network
+              </ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              @if (qrContentInfo.displayData?.ssid) {
+                <ion-item>
+                  <ion-label position="stacked">Network Name (SSID)</ion-label>
+                  <ion-input [value]="qrContentInfo.displayData.ssid" readonly></ion-input>
+                </ion-item>
+              }
+              @if (qrContentInfo.displayData?.password) {
+                <ion-item>
+                  <ion-label position="stacked">Password</ion-label>
+                  <ion-input [value]="qrContentInfo.displayData.password" readonly type="password"></ion-input>
+                </ion-item>
+              }
+              @if (qrContentInfo.displayData?.security) {
+                <ion-item>
+                  <ion-label position="stacked">Security</ion-label>
+                  <ion-input [value]="qrContentInfo.displayData.security" readonly></ion-input>
+                </ion-item>
+              }
+              <div class="content-actions">
+                <ion-button expand="block" fill="outline" (click)="resetScan()">
+                  Scan Another QR Code
+                </ion-button>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        }
+
+        <!-- Default: Text/JSON or other content -->
+        @default {
+          <ion-card class="text-card">
+            <ion-card-header>
+              <ion-card-title>
+                <ion-icon [name]="qrContentInfo.icon" color="medium" slot="start"></ion-icon>
+                {{ qrContentInfo.title }}
+              </ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              @if (qrContentInfo.type === 'json' && qrContentInfo.displayData) {
+                <div class="json-display">
+                  <pre>{{ qrContentInfo.displayData | json }}</pre>
+                </div>
+              } @else {
+                <ion-item>
+                  <ion-label position="stacked">Content</ion-label>
+                  <ion-textarea [value]="rawQRContent" readonly auto-grow></ion-textarea>
+                </ion-item>
+              }
+              <div class="content-actions">
+                <ion-button expand="block" fill="outline" (click)="resetScan()">
+                  Scan Another QR Code
+                </ion-button>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        }
+      }
+    }
+
+    <!-- Help Text -->
+    @if (!qrContentInfo && !isScanning()) {
+      <ion-card>
+        <ion-card-content>
+          <div class="help-text">
+            <ion-icon name="alert-circle" color="medium"></ion-icon>
+            <p>Point your camera at a QR code or take a photo to scan and process various types of content.</p>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    }
+  </div>
+</ion-content>

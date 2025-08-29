@@ -1,0 +1,63 @@
+h2 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  color: var(--ion-color-primary);
+}
+
+.action-button-container {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+ion-item {
+  margin-bottom: 0.5rem;
+  
+  ion-icon {
+    font-size: 1.5rem;
+  }
+  
+  ion-note {
+    font-weight: 600;
+  }
+}
+
+ion-list {
+  background: transparent;
+  
+  ion-item {
+    --background: var(--ion-color-light);
+    --border-radius: 8px;
+    margin-bottom: 8px;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// Modal styles
+ion-modal {
+  .modal-buttons {
+    margin-top: 2rem;
+  }
+  
+  ion-content {
+    h3 {
+      color: var(--ion-color-primary);
+      margin-bottom: 0.5rem;
+    }
+    
+    p {
+      color: var(--ion-color-medium);
+      margin-bottom: 1.5rem;
+    }
+  }
+}
+
+// Toolbar customization
+ion-toolbar {
+  ion-title {
+    font-weight: 600;
+  }
+}

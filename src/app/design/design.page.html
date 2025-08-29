@@ -1,0 +1,26 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Design
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Design</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  
+  <div class="ion-padding">
+    <ion-button fill="outline" (click)="goBack()" style="margin-bottom: 1rem;">
+      <ion-icon name="arrow-back" slot="start"></ion-icon>
+      Back to Home
+    </ion-button>
+    
+    <h1>Design Page</h1>
+    <p>Design functionality will be implemented here.</p>
+    <p>This is a standalone page outside of the tab navigation.</p>
+  </div>
+</ion-content>
