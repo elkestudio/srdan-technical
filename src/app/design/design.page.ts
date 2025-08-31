@@ -1,24 +1,25 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { IonContent, IonIcon, IonFooter, IonHeader } from '@ionic/angular/standalone';
+import { IonContent, IonIcon, IonFooter, IonHeader, IonToolbar, IonGrid, IonRow, IonCol, IonButtons } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { 
   arrowBack, 
-  cellular, 
-  wifi, 
-  batteryFull, 
   arrowDown, 
   home, 
   statsChart, 
   card, 
-  person 
+  person,
+  settingsOutline,
+  logoApple,
+  giftOutline,
+  notificationsOutline
 } from 'ionicons/icons';
 
 @Component({
   selector: 'app-design',
   templateUrl: 'design.page.html',
   styleUrls: ['design.page.scss'],
-  imports: [IonContent, IonIcon, IonFooter, IonHeader],
+  imports: [IonContent, IonIcon, IonFooter, IonHeader, IonToolbar, IonGrid, IonRow, IonCol],
 })
 export class DesignPage {
   private router = inject(Router);
@@ -26,14 +27,15 @@ export class DesignPage {
   constructor() {
     addIcons({ 
       arrowBack, 
-      cellular, 
-      wifi, 
-      batteryFull, 
       arrowDown, 
       home, 
       statsChart, 
       card, 
-      person 
+      person,
+      settingsOutline,
+      logoApple,
+      giftOutline,
+      notificationsOutline
     });
   }
 

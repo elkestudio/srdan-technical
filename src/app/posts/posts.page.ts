@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, signal, computed, effect } from '@angular/core';
 import { 
   RefresherCustomEvent, 
   IonHeader, 
@@ -63,11 +63,21 @@ export class PostsPage implements OnInit, OnDestroy {
   private alertController = inject(AlertController);
   private toastController = inject(ToastController);
   
-  public posts: Post[] = [];
-  public currentPage = 1;
-  public isLoading = false;
-  public isOnline = true;
-  public dataSource = 'API';
+  // Signals for reactive state management
+  public posts = signal<Post[]>([]);
+  public currentPage = signal<number>(1);
+  public isLoading = signal<boolean>(false);
+  public isOnline = signal<boolean>(true);
+  public dataSource = signal<string>('API');
+  
+  // Computed values based on signals
+  public networkIcon = computed(() => this.isOnline() ? 'wifi' : 'wifi-outline');
+  public networkColor = computed(() => this.isOnline() ? 'success' : 'danger');
+  public connectionStatus = computed(() => `${this.isOnline() ? 'Online' : 'Offline'} - ${this.dataSource()}`);
+  public loadingMessage = computed(() => this.isOnline() ? 'Loading posts from API...' : 'Loading cached posts...');
+  public canGoToPreviousPage = computed(() => this.currentPage() > 1 && !this.isLoading());
+  
+  private networkListener: any = null;
   
   constructor() {
     addIcons({ 
@@ -79,6 +89,12 @@ export class PostsPage implements OnInit, OnDestroy {
       wifi,
       wifiOutline,
       trash
+    });
+    
+    // Effect to handle network status changes
+    effect(() => {
+      const online = this.isOnline();
+      console.log('Network status changed:', online ? 'Online' : 'Offline');
     });
   }
 
@@ -94,27 +110,30 @@ export class PostsPage implements OnInit, OnDestroy {
   private async setupNetworkListeners() {
     // Get initial network status
     const status = await Network.getStatus();
-    this.isOnline = status.connected;
+    this.isOnline.set(status.connected);
 
     // Listen for network changes
-    Network.addListener('networkStatusChange', (status) => {
-      const wasOnline = this.isOnline;
-      this.isOnline = status.connected;
+    this.networkListener = await Network.addListener('networkStatusChange', (status) => {
+      const wasOnline = this.isOnline();
+      this.isOnline.set(status.connected);
       
-      if (!wasOnline && this.isOnline) {
+      if (!wasOnline && this.isOnline()) {
         this.showToast('Connection restored', 'success');
-      } else if (wasOnline && !this.isOnline) {
+      } else if (wasOnline && !this.isOnline()) {
         this.showToast('You are offline. Showing cached data.', 'warning');
       }
     });
   }
 
   private async removeNetworkListeners() {
-    await Network.removeAllListeners();
+    if (this.networkListener) {
+      await this.networkListener.remove();
+      this.networkListener = null;
+    }
   }
 
   refresh(ev?: any) {
-    this.currentPage = 1;
+    this.currentPage.set(1);
     this.loadPosts(false).then(() => {
       if (ev) {
         (ev as RefresherCustomEvent).detail.complete();
@@ -127,52 +146,53 @@ export class PostsPage implements OnInit, OnDestroy {
   }
 
   async loadPosts(forceRefresh: boolean = false) {
-    this.isLoading = true;
-    this.dataSource = this.isOnline && !forceRefresh ? 'Cache/API' : forceRefresh ? 'API' : 'Cache';
+    this.isLoading.set(true);
+    const online = this.isOnline();
+    this.dataSource.set(online && !forceRefresh ? 'Cache/API' : forceRefresh ? 'API' : 'Cache');
     
     try {
-      this.data.getPosts(this.currentPage, forceRefresh).subscribe({
+      this.data.getPosts(this.currentPage(), forceRefresh).subscribe({
         next: (posts) => {
-          this.posts = posts;
-          this.isLoading = false;
+          this.posts.set(posts);
+          this.isLoading.set(false);
           
           // Update data source based on what we got
-          if (posts.length > 0 && this.isOnline) {
-            this.dataSource = 'API';
+          if (posts.length > 0 && this.isOnline()) {
+            this.dataSource.set('API');
           } else if (posts.length > 0) {
-            this.dataSource = 'Cache';
+            this.dataSource.set('Cache');
           } else {
-            this.dataSource = 'No Data';
+            this.dataSource.set('No Data');
           }
         },
         error: (error) => {
           console.error('Error loading posts:', error);
-          this.isLoading = false;
-          this.dataSource = 'Error';
+          this.isLoading.set(false);
+          this.dataSource.set('Error');
           this.showToast('Failed to load posts', 'danger');
         }
       });
     } catch (error) {
       console.error('Error loading posts:', error);
-      this.isLoading = false;
-      this.dataSource = 'Error';
+      this.isLoading.set(false);
+      this.dataSource.set('Error');
     }
   }
 
   nextPage() {
-    this.currentPage++;
+    this.currentPage.update(page => page + 1);
     this.loadPosts();
   }
 
   previousPage() {
-    if (this.currentPage > 1) {
-      this.currentPage--;
+    if (this.currentPage() > 1) {
+      this.currentPage.update(page => page - 1);
       this.loadPosts();
     }
   }
 
   getPosts(): Post[] {
-    return this.posts;
+    return this.posts();
   }
 
   async showCacheInfo() {
@@ -183,8 +203,8 @@ export class PostsPage implements OnInit, OnDestroy {
       message: `
       Cached Pages: ${cacheInfo.totalPages}\n
       Last Cached: ${cacheInfo.lastCached || 'Never'}\n
-      Current Status: ${this.isOnline ? 'Online' : 'Offline'}\n
-      Data Source: ${this.dataSource}`,
+      Current Status: ${this.isOnline() ? 'Online' : 'Offline'}\n
+      Data Source: ${this.dataSource()}`,
       buttons: ['OK']
     });
 

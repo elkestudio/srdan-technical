@@ -1,137 +1,85 @@
-<ion-header class="custom-header">
-  <div class="header-section">
-    <div class="status-bar">
-      <span class="time">9:41</span>
-      <div class="signal-icons">
-        <ion-icon name="cellular"></ion-icon>
-        <ion-icon name="wifi"></ion-icon>
-        <ion-icon name="battery-full"></ion-icon>
-      </div>
-    </div>
-    
-    <div class="balance-card">
-      <div class="card-info">
-        <img src="assets/design/visa.png" alt="Card" class="card-image">
-        <span class="card-label">Available Balance</span>
-      </div>
-      <div class="balance-amount">1.234,56€</div>
-    </div>
-    
-    <div class="monthly-spend">
-      <div class="spend-info">
-        <span class="spend-label">Monthly Spend</span>
-        <div class="spend-details">
-          <span class="spend-amount">582,23€</span>
-          <span class="spend-change">+3.2%</span>
-          <img src="assets/design/arrow_up_green.png" alt="Up arrow" class="arrow-icon">
-        </div>
-      </div>
-      <img src="assets/design/chart.png" alt="Chart" class="chart-icon">
-    </div>
-    
-    <div class="loyalty-section">
-      <div class="loyalty-info">
-        <span class="loyalty-label">NLB loyalty level</span>
-        <span class="loyalty-status">standard</span>
-      </div>
-      <div class="stars">
-        <img src="assets/design/star.png" alt="Star" class="star filled">
-        <img src="assets/design/star.png" alt="Star" class="star filled">
-        <img src="assets/design/star.png" alt="Star" class="star">
-        <img src="assets/design/arrow_right_yellow.png" alt="Arrow" class="arrow-right">
-      </div>
-    </div>
-    
-    <div class="achievements-section">
-      <div class="section-header">
-        <span class="section-title">My Achievements</span>
-        <span class="achievement-count">9</span>
-        <button class="add-btn">+</button>
-      </div>
-    </div>
-  </div>
-</ion-header>
+<ion-header> </ion-header>
 
-<ion-content [fullscreen]="true" class="main-content">
-  <div class="content-section">
-    <div class="action-cards">
-      <div class="action-card camping">
-        <img src="assets/design/van.png" alt="Camping" class="card-icon">
-        <div class="card-content">
-          <span class="card-title">Camping fee</span>
-          <span class="card-amount">200,00€</span>
-        </div>
-      </div>
-      
-      <div class="action-card split-payment">
-        <div class="split-icon">
-          <span class="split-text">Split</span>
-        </div>
-        <div class="card-content">
-          <span class="card-title">Split Payment</span>
-          <span class="card-amount">238,50€</span>
-        </div>
-      </div>
-      
-      <div class="action-card new">
-        <div class="new-icon">
-          <img src="assets/design/big_bang.png" alt="New" class="bang-icon">
-        </div>
-        <div class="card-content">
-          <span class="card-title">New</span>
-          <span class="card-amount">120,00</span>
-        </div>
-      </div>
-    </div>
-    
-    <div class="recent-transactions">
-      <div class="section-header-simple">
-        <span class="section-title">Recent Transactions</span>
-        <img src="assets/design/arrow_right_yellow.png" alt="Arrow" class="arrow-right-small">
-      </div>
-      
-      <div class="transaction-item">
-        <div class="transaction-icon receive">
-          <ion-icon name="arrow-down" class="transaction-arrow"></ion-icon>
-        </div>
-        <div class="transaction-details">
-          <span class="transaction-type">Receive</span>
-          <span class="transaction-desc">Topup from Mastercard **1402</span>
-        </div>
-        <div class="transaction-amount positive">+25,65€</div>
-      </div>
-      
-      <div class="transaction-item">
-        <div class="transaction-icon payment">
-          <img src="assets/design/big_bang.png" alt="Payment" class="payment-icon">
-        </div>
-        <div class="transaction-details">
-          <span class="transaction-type">Payment</span>
-          <span class="transaction-desc">Big Bang</span>
-        </div>
-        <div class="transaction-amount negative">-238,50€</div>
-      </div>
-    </div>
+<ion-content>
+  <div class="content-background">
+    <div class="purple-section"></div>
+    <div class="white-section"></div>
+  </div>
+
+  <!-- Top Card Section -->
+  <div class="top-card-section">
+    <ion-grid>
+      <ion-row class="ion-align-items-center card-header">
+        <ion-col size="auto">
+          <img src="assets/design/visa.png" alt="Visa" class="visa-image" />
+        </ion-col>
+        <ion-col>
+          <span class="available-balance-text">Available Balance</span>
+          <div class="balance-amount">1.234,56€</div>
+        </ion-col>
+        <ion-col size="auto">
+          <img
+            src="assets/design/notification_bell.png"
+            alt="Notifications"
+            class="notification-bell"
+          />
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="card-bottom">
+        <ion-col size="12" class="ion-text-center">
+          <div class="three-dots">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </div>
 </ion-content>
 
-<ion-footer>
-  <div class="bottom-nav">
-    <div class="nav-item active">
-      <ion-icon name="home"></ion-icon>
-      <span>Home</span>
-    </div>
-    <div class="nav-item">
-      <ion-icon name="stats-chart"></ion-icon>
-      <span>Analytics</span>
-    </div>
-    <div class="nav-item">
-      <ion-icon name="card"></ion-icon>
-      <span>Cards</span>
-    </div>
-    <div class="nav-item">
-      <ion-icon name="person"></ion-icon>
-      <span>Profile</span>
-    </div>
+<!-- Floating Apple Pay Button -->
+<div class="floating-pay-button">
+  <div class="pay-circle">
+    <ion-icon name="logo-apple"></ion-icon>
+    <span class="pay-text">Pay</span>
   </div>
+</div>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-grid class="bottom-nav-grid">
+      <ion-row class="bottom-nav">
+        <ion-col size="2.4">
+          <div class="nav-item">
+            <ion-icon name="home"></ion-icon>
+            <span>Home</span>
+          </div>
+        </ion-col>
+        <ion-col size="2.4">
+          <div class="nav-item">
+            <ion-icon name="stats-chart"></ion-icon>
+            <span>Stats</span>
+          </div>
+        </ion-col>
+        <ion-col size="2.4">
+          <!-- Dummy/invisible space for floating button -->
+          <div class="nav-item dummy-space"></div>
+        </ion-col>
+        <ion-col size="2.4">
+          <div class="nav-item">
+            <ion-icon name="card"></ion-icon>
+            <span>My Cards</span>
+          </div>
+        </ion-col>
+        <ion-col size="2.4">
+          <div class="nav-item">
+            <ion-icon name="gift-outline"></ion-icon>
+            <span>Offers</span>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
 </ion-footer>

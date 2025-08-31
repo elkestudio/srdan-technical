@@ -30,10 +30,10 @@
         <ion-card-content>
           <div class="status-info">
             <ion-icon 
-              [name]="isOnline ? 'wifi' : 'wifi-outline'" 
-              [color]="isOnline ? 'success' : 'danger'">
+              [name]="networkIcon()" 
+              [color]="networkColor()">
             </ion-icon>
-            <span>{{ isOnline ? 'Online' : 'Offline' }} - {{ dataSource }}</span>
+            <span>{{ connectionStatus() }}</span>
           </div>
         </ion-card-content>
       </ion-card>
@@ -62,19 +62,19 @@
     <div class="pagination-controls">
       <ion-button 
         fill="outline" 
-        [disabled]="currentPage === 1 || isLoading" 
+        [disabled]="!canGoToPreviousPage()" 
         (click)="previousPage()">
         <ion-icon name="chevron-back" slot="start"></ion-icon>
         Previous
       </ion-button>
       
       <span class="page-indicator">
-        Page {{ currentPage }} (5 posts per page)
+        Page {{ currentPage() }} (5 posts per page)
       </span>
       
       <ion-button 
         fill="outline" 
-        [disabled]="isLoading" 
+        [disabled]="isLoading()" 
         (click)="nextPage()">
         Next
         <ion-icon name="chevron-forward" slot="end"></ion-icon>
@@ -89,10 +89,10 @@
       </ion-button>
     </div>
 
-    @if (isLoading) {
+    @if (isLoading()) {
       <div class="loading-container">
         <ion-spinner></ion-spinner>
-        <p>{{ isOnline ? 'Loading posts from API...' : 'Loading cached posts...' }}</p>
+        <p>{{ loadingMessage() }}</p>
       </div>
     }
   </div>

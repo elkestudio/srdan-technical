@@ -1,169 +1,563 @@
-ion-header.custom-header {
-  --background: linear-gradient(180deg, #6B46C1 0%, #9333EA 100%);
-  --color: white;
-  
-  .header-section {
-    padding: 0 20px 20px;
+// Color variables to match the design
+:root {
+  --purple-primary: #4621b6;
+  --white: #ffffff;
+  --smoke-white: #f8fafc;
+  --gray-light: #f8fafc;
+  --gray-medium: #e2e8f0;
+  --gray-text: #64748b;
+  --green-positive: #10b981;
+  --red-negative: #ef4444;
+  --blue-payment: #3b82f6;
+  --purple-camping: #8b5cf6;
+}
+
+// Global page styling
+ion-content {
+  --background: transparent;
+  position: relative;
+}
+
+// Split background for content
+.content-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: -1;
+
+  .purple-section {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50%; // Top half purple
+    background: #5b21b6;
+  }
+
+  .white-section {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50%; // Bottom half smoke white
+    background: #f8fafc;
+  }
+}
+
+// Top Card Section
+.top-card-section {
+  position: relative;
+  z-index: 10;
+  padding: 60px 20px 40px 20px; // Extra top padding for status bar area
+
+  ion-grid {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+    padding: 24px 20px;
+    backdrop-filter: blur(10px);
+  }
+
+  .card-header {
+    margin-bottom: 8px;
+
+    .visa-image {
+      width: 72px;
+      margin-right: 12px;
+    }
+
+    .available-balance-text {
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .notification-bell {
+      width: 56px;
+    }
+  }
+
+  .balance-amount {
+    font-size: 36px;
+    font-weight: 700;
     color: white;
   }
-}
 
-// Shared flex utilities
-%flex-between { display: flex; justify-content: space-between; align-items: center; }
-%flex-center { display: flex; align-items: center; }
-%white-overlay { background: rgba(255, 255, 255, 0.2); }
+  .card-bottom {
+    margin-top: 16px;
 
-.status-bar {
-  @extend %flex-between;
-  padding: 8px 0;
-  font: 600 14px/1;
-  
-  .signal-icons { @extend %flex-center; gap: 4px; ion-icon { font-size: 16px; } }
-}
+    .three-dots {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
 
-.balance-card {
-  margin-top: 20px;
-  
-  .card-info { @extend %flex-center; gap: 8px; margin-bottom: 8px; }
-  .card-image { width: 24px; height: 16px; }
-  .card-label { font: 14px/1; opacity: 0.8; }
-  .balance-amount { font: 700 32px/1; margin-bottom: 20px; }
-}
-
-.monthly-spend, .loyalty-section {
-  @extend %flex-between;
-  margin-bottom: 20px;
-}
-
-.spend-label, .loyalty-label {
-  display: block;
-  font: 14px/1;
-  opacity: 0.8;
-  margin-bottom: 4px;
-}
-
-.spend-details { @extend %flex-center; gap: 8px; }
-.spend-amount { font: 600 18px/1; }
-.spend-change { font: 14px/1; color: #10B981; }
-.loyalty-status { font: 600 16px/1; }
-
-.arrow-icon { width: 12px; height: 12px; }
-.chart-icon { width: 40px; height: 24px; }
-
-.stars { @extend %flex-center; gap: 4px; }
-.star { width: 16px; height: 16px; opacity: 0.3; &.filled { opacity: 1; } }
-.arrow-right { width: 12px; height: 12px; margin-left: 8px; }
-
-.section-header { @extend %flex-center; gap: 8px; }
-.section-title { font: 600 16px/1; }
-.achievement-count { @extend %white-overlay; border-radius: 12px; padding: 2px 8px; font: 600 12px/1; }
-.add-btn { @extend %white-overlay; border: none; border-radius: 50%; width: 24px; height: 24px; font-size: 16px; margin-left: auto; }
-
-.main-content { --background: white; --color: #000; }
-.content-section { background: white; padding: 24px 20px; flex: 1; color: #000; }
-
-.action-cards {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 24px;
-}
-
-.action-card {
-  flex: 1;
-  background: #F3F4F6;
-  border-radius: 16px;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  min-height: 80px;
-  
-  &.camping { background: #8B5CF6; color: white; }
-  &.split-payment { background: #3B82F6; color: white; }
-}
-
-.card-icon, .split-icon, .new-icon { margin-bottom: 8px; }
-.card-icon { width: 32px; height: 32px; }
-.split-icon { @extend %white-overlay; border-radius: 8px; padding: 4px 8px; font: 600 12px/1; }
-.bang-icon { width: 24px; height: 24px; }
-
-.card-content {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  
-  .card-title { font: 500 12px/1; }
-  .card-amount { font: 600 14px/1; }
-}
-
-.recent-transactions {
-  .section-header-simple {
-    @extend %flex-between;
-    margin-bottom: 16px;
-    
-    .section-title { font: 600 16px/1; color: #000; }
-    .arrow-right-small { width: 12px; height: 12px; }
+      .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.5);
+        display: inline-block;
+      }
+    }
   }
 }
 
-.transaction-item {
-  @extend %flex-center;
-  gap: 12px;
-  padding: 12px 0;
-  border-bottom: 1px solid #F3F4F6;
-  
-  &:last-child { border-bottom: none; }
+// Custom header with purple background
+ion-header.custom-header {
+  --background: transparent;
+
+  .purple-toolbar {
+    --background: var(--purple-primary);
+    --color: var(--white);
+    --border-width: 0;
+    --padding-top: 24px;
+    --padding-bottom: 24px;
+    --padding-start: 20px;
+    --padding-end: 20px;
+    --min-height: auto;
+  }
 }
 
-.transaction-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  @extend %flex-center;
-  justify-content: center;
-  
-  &.receive { background: #10B981; .transaction-arrow { color: white; font-size: 20px; } }
-  &.payment { background: #3B82F6; .payment-icon { width: 20px; height: 20px; } }
+// Balance card section
+.balance-grid {
+  margin: 0;
+  padding: 0;
+
+  .balance-card {
+    .card-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+
+      .card-image {
+        width: 28px;
+        height: 18px;
+      }
+
+      .card-label {
+        font-size: 15px;
+        color: rgba(255, 255, 255, 0.8);
+        flex: 1;
+      }
+
+      .settings-icon {
+        font-size: 20px;
+        color: rgba(255, 255, 255, 0.6);
+      }
+    }
+
+    .balance-amount {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 24px;
+    }
+  }
 }
 
-.transaction-details {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  
-  .transaction-type { font: 600 14px/1; color: #000; }
-  .transaction-desc { font: 12px/1; color: #6B7280; }
+// Monthly spend section
+.monthly-spend-grid {
+  margin: 0 0 20px 0;
+  padding: 0;
+
+  .spend-info {
+    .spend-label {
+      display: block;
+      font-size: 15px;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 4px;
+    }
+
+    .spend-details {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .spend-amount {
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--white);
+      }
+
+      .spend-change {
+        font-size: 14px;
+        color: var(--green-positive);
+        font-weight: 500;
+      }
+
+      .arrow-icon {
+        width: 12px;
+        height: 12px;
+      }
+    }
+  }
+
+  .chart-icon {
+    width: 48px;
+    height: 28px;
+  }
 }
 
-.transaction-amount {
-  font: 600 14px/1;
-  &.positive { color: #10B981; }
-  &.negative { color: #EF4444; }
-}
+// Loyalty section
+.loyalty-grid {
+  margin: 0 0 20px 0;
+  padding: 0;
 
-ion-footer {
-  --background: white;
-  
-  .bottom-nav {
+  .loyalty-info {
+    .loyalty-label {
+      display: block;
+      font-size: 15px;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 4px;
+    }
+
+    .loyalty-status {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--white);
+    }
+  }
+
+  .stars {
     display: flex;
-    background: white;
-    padding: 12px 0;
-    border-top: 1px solid #F3F4F6;
+    align-items: center;
+    gap: 4px;
+
+    .star {
+      width: 16px;
+      height: 16px;
+      opacity: 0.3;
+
+      &.filled {
+        opacity: 1;
+      }
+    }
+
+    .arrow-right {
+      width: 12px;
+      height: 12px;
+      margin-left: 8px;
+    }
   }
 }
 
-.nav-item {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  color: #9CA3AF;
-  
-  &.active { color: #6B46C1; }
-  
-  ion-icon { font-size: 20px; }
-  span { font: 500 10px/1; }
+// Achievements section
+.achievements-grid {
+  margin: 0;
+  padding: 0;
+
+  .section-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--white);
+  }
+
+  .achievement-count {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--white);
+  }
+
+  .add-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    font-size: 18px;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+// Main content section
+.main-content {
+  --background: var(--white);
+
+  .content-section {
+    background: var(--white);
+    padding: 24px 20px;
+    min-height: 100%;
+  }
+}
+
+// Action cards section
+.action-cards-grid {
+  margin: 0 0 32px 0;
+  padding: 0;
+
+  .action-card {
+    background: var(--gray-light);
+    border-radius: 16px;
+    padding: 16px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-height: 100px;
+
+    &.camping {
+      background: var(--purple-camping);
+      color: var(--white);
+    }
+
+    &.split-payment {
+      background: var(--blue-payment);
+      color: var(--white);
+    }
+
+    .card-icon {
+      width: 32px;
+      height: 32px;
+      margin-bottom: 12px;
+    }
+
+    .split-icon {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 6px 12px;
+      margin-bottom: 12px;
+
+      .split-text {
+        font-size: 12px;
+        font-weight: 600;
+      }
+    }
+
+    .new-icon {
+      margin-bottom: 12px;
+
+      .bang-icon {
+        width: 28px;
+        height: 28px;
+      }
+    }
+
+    .card-content {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      .card-title {
+        font-size: 13px;
+        font-weight: 500;
+        opacity: 0.9;
+      }
+
+      .card-amount {
+        font-size: 15px;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+// Recent transactions section
+.recent-transactions-grid {
+  margin: 0;
+  padding: 0;
+
+  .section-header-simple {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    .arrow-right-small {
+      width: 12px;
+      height: 12px;
+    }
+  }
+
+  .transaction-item {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--gray-medium);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .transaction-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+
+      &.receive {
+        background: var(--green-positive);
+
+        .transaction-arrow {
+          color: var(--white);
+          font-size: 20px;
+        }
+      }
+
+      &.payment {
+        background: var(--blue-payment);
+
+        .payment-icon {
+          width: 20px;
+          height: 20px;
+        }
+      }
+    }
+
+    .transaction-details-col {
+      padding: 0 8px;
+    }
+
+    .transaction-details {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      .transaction-type {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1f2937;
+      }
+
+      .transaction-desc {
+        font-size: 14px;
+        color: var(--gray-text);
+      }
+    }
+
+    .transaction-amount {
+      font-size: 16px;
+      font-weight: 600;
+
+      &.positive {
+        color: var(--green-positive);
+      }
+
+      &.negative {
+        color: var(--red-negative);
+      }
+    }
+  }
+}
+
+// Floating Apple Pay Button
+.floating-pay-button {
+  position: fixed;
+  bottom: 45px; // Lowered to sit closer to footer, right in the middle space
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+
+  .pay-circle {
+    background: #000;
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 3px solid var(--white); // White border to make it pop
+
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    ion-icon {
+      color: white;
+      font-size: 16px;
+      margin-right: 5px;
+    }
+
+    .pay-text {
+      color: white;
+      font-size: 13px;
+      font-weight: 600;
+    }
+  }
+}
+
+// Bottom navigation
+ion-footer {
+  --background: var(--white);
+  border-top: 1px solid var(--gray-medium);
+
+  ion-toolbar {
+    --background: var(--white);
+    --border-width: 0;
+    --padding-start: 0;
+    --padding-end: 0;
+  }
+
+  .bottom-nav-grid {
+    margin: 0;
+    padding: 0;
+
+    .bottom-nav {
+      padding: 12px 0 8px 0;
+      background: var(--white);
+    }
+  }
+
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: #9ca3af;
+    padding: 8px 4px;
+
+    &.active {
+      color: #5b21b6;
+    }
+
+    ion-icon {
+      font-size: 24px;
+    }
+
+    span {
+      font-size: 10px;
+      font-weight: 500;
+    }
+
+    // Dummy space for floating button positioning
+    &.dummy-space {
+      visibility: hidden; // Takes up space but invisible
+      height: 60px; // Match the height of other nav items
+    }
+  }
+}
+
+// Remove default ionic padding and margins for grid
+ion-grid {
+  padding: 0;
+  margin: 0;
+}
+
+ion-row {
+  margin: 0;
+}
+
+ion-col {
+  padding: 0;
 }
