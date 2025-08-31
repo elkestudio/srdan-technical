@@ -26,6 +26,22 @@
 @import "@ionic/angular/css/flex-utils.css";
 
 /**
+ * Status Bar and Safe Area Handling
+ * -----------------------------------------------------
+ */
+ion-app {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* Ensure status bar area is properly handled */
+.ios ion-header {
+  padding-top: env(safe-area-inset-top);
+}
+
+/**
  * Ionic Dark Mode
  * -----------------------------------------------------
  * For more info, please see:

@@ -1,0 +1,164 @@
+.not-found-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: calc(100vh - 200px);
+}
+
+.error-card {
+  margin-bottom: 1rem;
+}
+
+.error-content {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.error-number {
+  margin-bottom: 1rem;
+  
+  h1 {
+    font-size: 8rem;
+    font-weight: bold;
+    margin: 0;
+    color: var(--ion-color-warning);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    
+    @media (max-width: 768px) {
+      font-size: 6rem;
+    }
+    
+    @media (max-width: 480px) {
+      font-size: 4rem;
+    }
+  }
+}
+
+.error-icon {
+  margin-bottom: 1.5rem;
+  
+  ion-icon {
+    font-size: 4rem;
+    
+    @media (max-width: 480px) {
+      font-size: 3rem;
+    }
+  }
+}
+
+.error-message {
+  margin-bottom: 2rem;
+  
+  h2 {
+    color: var(--ion-color-dark);
+    margin-bottom: 0.5rem;
+    font-size: 2rem;
+    
+    @media (max-width: 480px) {
+      font-size: 1.5rem;
+    }
+  }
+  
+  p {
+    color: var(--ion-color-medium);
+    font-size: 1.1rem;
+    line-height: 1.5;
+    max-width: 400px;
+    margin: 0 auto;
+    
+    @media (max-width: 480px) {
+      font-size: 1rem;
+    }
+  }
+}
+
+.error-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 300px;
+  margin: 0 auto;
+  
+  ion-button {
+    margin: 0;
+  }
+}
+
+.help-card {
+  .ion-card-header {
+    padding-bottom: 0.5rem;
+  }
+  
+  .ion-card-content {
+    padding-top: 0;
+  }
+  
+  p {
+    color: var(--ion-color-medium);
+    margin-bottom: 1rem;
+  }
+}
+
+// Animation for the error number
+.error-number h1 {
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+// Hover effects for navigation items
+ion-item {
+  --transition: all 0.3s ease;
+  
+  &:hover {
+    --background: var(--ion-color-light);
+    transform: translateX(4px);
+  }
+}
+
+// Mobile responsiveness
+@media (max-width: 768px) {
+  .not-found-container {
+    gap: 0.75rem;
+  }
+  
+  .error-content {
+    padding: 1.5rem 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .not-found-container {
+    gap: 0.5rem;
+  }
+  
+  .error-content {
+    padding: 1rem 0.25rem;
+  }
+  
+  .error-actions {
+    max-width: 100%;
+    gap: 0.5rem;
+  }
+}
+
+// Dark mode support
+@media (prefers-color-scheme: dark) {
+  .error-number h1 {
+    color: var(--ion-color-warning-tint);
+  }
+  
+  .error-message h2 {
+    color: var(--ion-color-light);
+  }
+}

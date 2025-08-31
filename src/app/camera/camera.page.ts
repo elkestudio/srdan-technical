@@ -188,6 +188,13 @@ export class CameraPage implements OnInit, OnDestroy {
     try {
       this.isScanning.set(true);
       
+      // Check if camera permission is available
+      if (!await this.checkCameraPermission()) {
+        this.showToast('Camera permission is required for QR scanning', 'warning');
+        this.isScanning.set(false);
+        return;
+      }
+      
       // Start live QR scanning
       if (this.qrVideo?.nativeElement) {
         this.qrScanner = new QrScanner(
@@ -213,7 +220,19 @@ export class CameraPage implements OnInit, OnDestroy {
       }
     } catch (error) {
       console.error('Error starting camera scan:', error);
-      this.showToast('Failed to start camera scanning', 'danger');
+      
+      // Provide more specific error messages
+      const err = error as any;
+      if (err.name === 'NotAllowedError') {
+        this.showToast('Camera permission denied. Please enable camera access in settings.', 'danger');
+      } else if (err.name === 'NotFoundError') {
+        this.showToast('No camera found on this device.', 'danger');
+      } else if (err.name === 'NotSupportedError') {
+        this.showToast('Camera not supported in this browser.', 'danger');
+      } else {
+        this.showToast('Failed to start camera scanning. Try using "Take Photo & Scan" instead.', 'danger');
+      }
+      
       this.isScanning.set(false);
     }
   }
@@ -444,6 +463,18 @@ export class CameraPage implements OnInit, OnDestroy {
       this.qrScanner.destroy();
       this.qrScanner = null;
       this.isScanning.set(false);
+    }
+  }
+
+  private async checkCameraPermission(): Promise<boolean> {
+    try {
+      // Check if we can access user media (camera)
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      stream.getTracks().forEach(track => track.stop()); // Stop the stream immediately
+      return true;
+    } catch (error) {
+      console.error('Camera permission denied:', error);
+      return false;
     }
   }
 

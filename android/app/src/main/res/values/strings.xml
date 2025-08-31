@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Srdan Technical</string>
+    <string name="title_activity_main">Srdan Technical</string>
+    <string name="package_name">com.srdan_technical.app</string>
+    <string name="custom_url_scheme">com.srdan_technical.app</string>
+</resources>
