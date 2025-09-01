@@ -1,0 +1,3 @@
+[submodule "elke-battery"]
+	path = elke-battery
+	url = https://github.com/elkestudio/elke-battery.git
