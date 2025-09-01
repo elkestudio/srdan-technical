@@ -1,0 +1,12 @@
+{
+  "apps":
+  [
+    {
+      "appId": "e3336e7f",
+      "webBuildCommand": "npm run build",
+      "dependencyInstallCommand": "npm install",
+      "iosPath": "ios",
+      "androidPath": "android"
+    }
+  ]
+}

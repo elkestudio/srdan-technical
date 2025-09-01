@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.srdan_technical.app',
+  appId: 'com.srdantechnical.app',
   appName: 'Srdan Technical',
   webDir: 'www',
   plugins: {

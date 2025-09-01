@@ -1,4 +1,4 @@
-package com.srdan_technical.app;
+package com.srdantechnical.app;
 
 import com.getcapacitor.BridgeActivity;
 
