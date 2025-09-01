@@ -18,6 +18,44 @@ ionic build
 ionic build --prod
 ```
 
+### Custom Plugin Build Process
+
+For projects with local Capacitor plugins (like elke-battery), you need to build the plugin first before building the main application:
+
+```bash
+# Build local plugin (elke-battery) first
+cd elke-battery
+npm install
+npm run build
+cd ..
+
+# Then install main app dependencies and build
+npm install
+ionic build --prod
+```
+
+### Automated Build Script
+
+To streamline the build process, you can add these scripts to your main `package.json`:
+
+```json
+{
+  "scripts": {
+    "prebuild": "cd elke-battery && npm install && npm run build && cd ..",
+    "build": "ng build",
+    "build:prod": "npm run prebuild && ionic build --prod",
+    "install:all": "npm install && cd elke-battery && npm install && cd ..",
+    "build:plugin": "cd elke-battery && npm run build && cd ..",
+    "postinstall": "npm run build:plugin"
+  }
+}
+```
+
+This ensures that:
+- `npm run build:prod` automatically builds the plugin first
+- `npm run install:all` installs dependencies for both main app and plugin
+- `postinstall` hook automatically builds the plugin after npm install
+
 ### Platform Setup
 
 ```bash
@@ -44,6 +82,9 @@ ionic capacitor open android
 
 ### Production Build
 ```bash
+# Build local plugin first
+cd elke-battery && npm install && npm run build && cd ..
+
 # Production build with optimizations
 ionic build --prod
 ionic capacitor sync android
@@ -92,6 +133,9 @@ ionic capacitor open ios
 
 ### Production Build
 ```bash
+# Build local plugin first
+cd elke-battery && npm install && npm run build && cd ..
+
 # Production build
 ionic build --prod
 ionic capacitor sync ios
@@ -164,6 +208,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
         
+      - name: Build local plugin
+        run: |
+          cd elke-battery
+          npm ci
+          npm run build
+          cd ..
+        
       - name: Build Ionic app
         run: |
           ionic build --prod
@@ -190,6 +241,16 @@ jobs:
         uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: latest-stable
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Build local plugin
+        run: |
+          cd elke-battery
+          npm ci
+          npm run build
+          cd ..
           
       - name: Build iOS app
         run: |
