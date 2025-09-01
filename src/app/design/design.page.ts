@@ -1,6 +1,7 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { IonContent, IonIcon, IonFooter, IonHeader, IonToolbar, IonGrid, IonRow, IonCol, IonButtons, IonBadge } from '@ionic/angular/standalone';
+import { IonContent, IonIcon, IonFooter, IonToolbar, IonGrid, IonRow, IonCol, IonBadge, Platform } from '@ionic/angular/standalone';
+import { StatusBar, Style } from '@capacitor/status-bar';
 import { addIcons } from 'ionicons';
 import {
   home,
@@ -17,15 +18,20 @@ import {
   selector: 'app-design',
   templateUrl: 'design.page.html',
   styleUrls: ['design.page.scss'],
-  imports: [IonBadge, IonContent, IonIcon, IonFooter, IonHeader, IonToolbar, IonGrid, IonRow, IonCol],
+  imports: [IonBadge, IonContent, IonIcon, IonFooter, IonToolbar, IonGrid, IonRow, IonCol],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class DesignPage {
+export class DesignPage implements OnInit, OnDestroy {
   private router = inject(Router);
+  private platform = inject(Platform);
   
+  // Store original status bar settings
+  private originalStatusBarColor: string = '#ffffff';
+  private originalStatusBarStyle: Style = Style.Light;
+
   // Active navigation item
   activeNavItem = 'home'; // Default to home
-  
+
   // Navigation items
   navItems = [
     { id: 'home', icon: 'home', label: 'Home' },
@@ -103,6 +109,37 @@ export class DesignPage {
       caretForwardOutline,
       chevronForwardOutline
     });
+  }
+
+  async ngOnInit() {
+    // Set status bar for design page (only on native platforms)
+    if (this.platform.is('capacitor')) {
+      try {
+        
+        // Determine original settings based on device preference
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        this.originalStatusBarColor = prefersDark ? '#000000' : '#ffffff';
+        this.originalStatusBarStyle = prefersDark ? Style.Dark : Style.Light;
+        
+        // Set design page status bar
+        await StatusBar.setBackgroundColor({ color: '#28007d' });
+        await StatusBar.setStyle({ style: Style.Dark });
+      } catch (error) {
+        console.log('StatusBar not available:', error);
+      }
+    }
+  }
+
+  async ngOnDestroy() {
+    // Restore original status bar when leaving the page (only on native platforms)
+    if (this.platform.is('capacitor')) {
+      try {
+        await StatusBar.setBackgroundColor({ color: this.originalStatusBarColor });
+        await StatusBar.setStyle({ style: this.originalStatusBarStyle });
+      } catch (error) {
+        console.log('StatusBar not available:', error);
+      }
+    }
   }
 
   goBack() {

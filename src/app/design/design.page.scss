@@ -113,7 +113,7 @@ ion-content {
 .top-card-section {
   position: relative;
   z-index: 10;
-  padding: 60px 20px 0 20px;
+  padding: 30px 20px 0 20px;
 
   ion-grid {
     background: rgba(0, 0, 0, 0.3);
@@ -195,6 +195,18 @@ ion-content {
   .spend-change {
     font-size: 14px;
     font-weight: 600;
+  }
+
+  .spend-change-column {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .spend-change-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 4px;
   }
 
   .chart-icon {
