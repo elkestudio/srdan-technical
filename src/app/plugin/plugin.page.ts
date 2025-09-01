@@ -22,7 +22,6 @@ export class PluginPage implements OnInit, OnDestroy {
   isListening = false;
   callbackId: string | null = null;
   lastUpdated: Date | null = null;
-  pluginVersion: string = 'Unknown';
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -39,7 +38,6 @@ export class PluginPage implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    await this.getPluginVersion();
     await this.getBatteryInfo();
     await this.startBatteryListener();
   }
@@ -48,83 +46,6 @@ export class PluginPage implements OnInit, OnDestroy {
     this.stopBatteryListener();
   }
 
-  async getPluginVersion() {
-    try {
-      // Method 1: Try to get from app's package.json dependencies (most reliable)
-      this.pluginVersion = await this.getVersionFromAppPackage();
-      
-      if (this.pluginVersion === 'Unknown') {
-        // Method 2: Try to get version from node_modules (works in production)
-        this.pluginVersion = await this.getVersionFromNodeModules();
-      }
-      
-      if (this.pluginVersion === 'Unknown') {
-        // Method 3: Set known version as fallback
-        this.pluginVersion = '0.0.2';
-      }
-      
-    } catch (error) {
-      console.error('Error getting plugin version:', error);
-      this.pluginVersion = '0.0.2'; // Known current version
-    }
-  }
-
-  private async getVersionFromNodeModules(): Promise<string> {
-    try {
-      // In development, node_modules aren't served via HTTP
-      // This method will only work in production builds
-      const response = await fetch('/node_modules/elke-battery/package.json');
-      if (response.ok) {
-        const packageInfo = await response.json();
-        return packageInfo.version || 'Unknown';
-      }
-    } catch (error) {
-      // Expected to fail in development environment
-    }
-    return 'Unknown';
-  }
-
-  private async getVersionFromAppPackage(): Promise<string> {
-    try {
-      const response = await fetch('/package.json');
-      if (response.ok) {
-        const packageInfo = await response.json();
-        const dependencies = packageInfo.dependencies || {};
-        const devDependencies = packageInfo.devDependencies || {};
-        
-        // Check in dependencies first
-        if (dependencies['elke-battery']) {
-          return this.extractVersionFromDependency(dependencies['elke-battery']);
-        }
-        
-        // Check in devDependencies
-        if (devDependencies['elke-battery']) {
-          return this.extractVersionFromDependency(devDependencies['elke-battery']);
-        }
-      }
-    } catch (error) {
-      console.log('Could not fetch app package.json:', error);
-    }
-    return 'Unknown';
-  }
-
-  private extractVersionFromDependency(dependency: string): string {
-    // Handle git repositories with version tags
-    if (dependency.includes('git+') && dependency.includes('#')) {
-      const version = dependency.split('#')[1];
-      // Remove 'v' prefix if present (e.g., v1.0.0 -> 1.0.0)
-      return version.replace(/^v/, '') || 'Unknown';
-    }
-    
-    // Handle regular semver versions
-    if (dependency.match(/^\d+\.\d+\.\d+/)) {
-      return dependency;
-    }
-    
-    // Handle version ranges (^1.0.0, ~1.0.0, etc.)
-    const match = dependency.match(/[\d.]+/);
-    return match ? match[0] : 'Unknown';
-  }
 
   async getBatteryInfo() {
     try {

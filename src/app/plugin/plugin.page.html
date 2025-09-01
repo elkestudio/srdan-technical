@@ -13,10 +13,10 @@
     </ion-toolbar>
   </ion-header>
   
-  <div class="ion-padding">
+  <div>
     <ion-card>
       <ion-card-header>
-        <ion-card-title>
+        <ion-card-title class="ion-align-items-center">
           <ion-icon [name]="getBatteryIcon()" [color]="getBatteryColor()"></ion-icon>
           Battery Status
         </ion-card-title>
@@ -101,31 +101,7 @@
         </div>
       </ion-card-content>
     </ion-card>
-    
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>Plugin Information</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <ion-item>
-          <ion-label>
-            <h2>Plugin Name</h2>
-            <p>elke-battery</p>
-          </ion-label>
-        </ion-item>
-        <ion-item>
-          <ion-label>
-            <h2>Version</h2>
-            <p>{{ pluginVersion }}</p>
-          </ion-label>
-        </ion-item>
-        <ion-item>
-          <ion-label>
-            <h2>Supported Platforms</h2>
-            <p>Web, iOS, Android</p>
-          </ion-label>
-        </ion-item>
-      </ion-card-content>
-    </ion-card>
+
+
   </div>
 </ion-content>
