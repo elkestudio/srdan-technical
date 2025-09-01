@@ -17,7 +17,7 @@ def capacitor_pods
   pod 'CapacitorKeyboard', :path => '../../node_modules/@capacitor/keyboard'
   pod 'CapacitorNetwork', :path => '../../node_modules/@capacitor/network'
   pod 'CapacitorStatusBar', :path => '../../node_modules/@capacitor/status-bar'
-  pod 'ElkeBattery', :path => '../../elke-battery'
+  pod 'ElkeBattery', :path => '../../node_modules/elke-battery'
 end
 
 target 'App' do

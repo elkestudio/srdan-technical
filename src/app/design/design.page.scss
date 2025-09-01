@@ -1,15 +1,78 @@
-// Color variables to match the design
-:root {
-  --purple-primary: #4621b6;
-  --white: #ffffff;
-  --smoke-white: #f8fafc;
-  --gray-light: #f8fafc;
-  --gray-medium: #e2e8f0;
-  --gray-text: #64748b;
-  --green-positive: #10b981;
-  --red-negative: #ef4444;
-  --blue-payment: #3b82f6;
-  --purple-camping: #8b5cf6;
+$white9: rgba(255, 255, 255, 0.9);
+$white5: rgba(255, 255, 255, 0.5);
+
+// Remove default ionic padding and margins for grid
+ion-grid {
+  padding: 0;
+  margin: 0;
+}
+
+ion-row {
+  margin: 0;
+}
+
+ion-col {
+  padding: 0;
+}
+
+// Reusable interactive styles
+.interactive-base {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.interactive-hover-scale {
+  &:hover {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+.interactive-hover-lift {
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.interactive-hover-subtle {
+  &:hover {
+    background: #f8fafc;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+}
+
+.interactive-active {
+  &:active {
+    opacity: 0.6;
+    transition: all 0.1s ease;
+  }
+}
+
+.interactive-active-scale {
+  &:active {
+    transform: scale(0.95);
+    opacity: 0.6;
+    transition: all 0.1s ease;
+  }
+}
+
+.interactive-active-card {
+  &:active {
+    transform: translateY(0px) scale(0.98);
+    opacity: 0.6;
+    transition: all 0.1s ease;
+  }
+}
+
+.interactive-active-item {
+  &:active {
+    transform: translateY(0px) scale(0.99);
+    background: #f1f5f9;
+    opacity: 0.6;
+    transition: all 0.1s ease;
+  }
 }
 
 // Global page styling
@@ -27,13 +90,13 @@ ion-content {
   height: 100vh;
   z-index: -1;
 
-  .purple-section {
+  .blue-section {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: 50%; // Top half purple
-    background: #5b21b6;
+    height: 50%;
+    background: #28007d;
   }
 
   .white-section {
@@ -41,8 +104,8 @@ ion-content {
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 50%; // Bottom half smoke white
-    background: #f8fafc;
+    height: 50%;
+    background: whitesmoke;
   }
 }
 
@@ -50,7 +113,7 @@ ion-content {
 .top-card-section {
   position: relative;
   z-index: 10;
-  padding: 60px 20px 40px 20px; // Extra top padding for status bar area
+  padding: 60px 20px 0 20px;
 
   ion-grid {
     background: rgba(0, 0, 0, 0.3);
@@ -69,10 +132,13 @@ ion-content {
 
     .available-balance-text {
       font-size: 16px;
-      color: rgba(255, 255, 255, 0.9);
+      color: $white9;
     }
 
     .notification-bell {
+      @extend .interactive-base;
+      @extend .interactive-hover-scale;
+      @extend .interactive-active-scale;
       width: 56px;
     }
   }
@@ -92,131 +158,73 @@ ion-content {
       gap: 6px;
 
       .dot {
-        width: 6px;
-        height: 6px;
+        width: 4px;
+        height: 4px;
         border-radius: 50%;
-        background: rgba(255, 255, 255, 0.5);
+        background: $white5;
         display: inline-block;
       }
     }
   }
 }
 
-// Custom header with purple background
-ion-header.custom-header {
-  --background: transparent;
-
-  .purple-toolbar {
-    --background: var(--purple-primary);
-    --color: var(--white);
-    --border-width: 0;
-    --padding-top: 24px;
-    --padding-bottom: 24px;
-    --padding-start: 20px;
-    --padding-end: 20px;
-    --min-height: auto;
-  }
-}
-
-// Balance card section
-.balance-grid {
-  margin: 0;
-  padding: 0;
-
-  .balance-card {
-    .card-info {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 8px;
-
-      .card-image {
-        width: 28px;
-        height: 18px;
-      }
-
-      .card-label {
-        font-size: 15px;
-        color: rgba(255, 255, 255, 0.8);
-        flex: 1;
-      }
-
-      .settings-icon {
-        font-size: 20px;
-        color: rgba(255, 255, 255, 0.6);
-      }
-    }
-
-    .balance-amount {
-      font-size: 36px;
-      font-weight: 700;
-      color: var(--white);
-      margin-bottom: 24px;
-    }
-  }
-}
-
 // Monthly spend section
-.monthly-spend-grid {
-  margin: 0 0 20px 0;
-  padding: 0;
+.monthly-spend-section {
+  position: relative;
+  z-index: 10;
+  margin: 16px 20px;
+  padding-bottom: 20px;
+  color: white;
+  border-bottom: 1px solid $white5;
 
-  .spend-info {
-    .spend-label {
-      display: block;
-      font-size: 15px;
-      color: rgba(255, 255, 255, 0.8);
-      margin-bottom: 4px;
-    }
+  .spend-label {
+    font-size: 15px;
+    display: block;
+  }
 
-    .spend-details {
-      display: flex;
-      align-items: center;
-      gap: 8px;
+  .spend-amount {
+    font-size: 28px;
+    font-weight: 700;
+  }
 
-      .spend-amount {
-        font-size: 20px;
-        font-weight: 600;
-        color: var(--white);
-      }
+  .increase-arrow {
+    font-size: 16px;
+    margin-right: 4px;
+  }
 
-      .spend-change {
-        font-size: 14px;
-        color: var(--green-positive);
-        font-weight: 500;
-      }
-
-      .arrow-icon {
-        width: 12px;
-        height: 12px;
-      }
-    }
+  .spend-change {
+    font-size: 14px;
+    font-weight: 600;
   }
 
   .chart-icon {
-    width: 48px;
-    height: 28px;
+    width: 40px;
+    opacity: 0.8;
   }
 }
 
 // Loyalty section
-.loyalty-grid {
-  margin: 0 0 20px 0;
-  padding: 0;
+.loyalty-section {
+  padding-bottom: 12px;
+  margin: 12px 20px;
+  color: white;
+  border-bottom: 1px solid $white5;
 
-  .loyalty-info {
-    .loyalty-label {
-      display: block;
-      font-size: 15px;
-      color: rgba(255, 255, 255, 0.8);
-      margin-bottom: 4px;
-    }
+  .loyalty-label {
+    display: block;
+    font-size: 18px;
+    font-weight: 600;
+  }
 
-    .loyalty-status {
-      font-size: 18px;
-      font-weight: 600;
-      color: var(--white);
-    }
+  .loyalty-level {
+    font-size: 15px;
+    color: $white9;
+  }
+  .loyalty-status {
+    font-size: 12px;
+    font-weight: 600;
+    color: $white9;
+    margin-right: 8px;
   }
 
   .stars {
@@ -225,232 +233,165 @@ ion-header.custom-header {
     gap: 4px;
 
     .star {
-      width: 16px;
-      height: 16px;
-      opacity: 0.3;
+      width: 20px;
+      height: 20px;
 
-      &.filled {
-        opacity: 1;
+      &.icon {
+        margin-left: -4px;
+        color: #ffc700;
+        width: 26px;
+        height: 26px;
+
+        // Hover effect
+        &:hover {
+          transform: scale(1.1);
+          opacity: 0.8;
+        }
+
+        // Click/tap indication
+        &:active {
+          transform: scale(0.95);
+          opacity: 0.6;
+          transition: all 0.1s ease;
+        }
       }
-    }
-
-    .arrow-right {
-      width: 12px;
-      height: 12px;
-      margin-left: 8px;
     }
   }
 }
 
 // Achievements section
-.achievements-grid {
-  margin: 0;
-  padding: 0;
+.achievements-section {
+  position: relative;
+  padding: 0 20px 20px;
+  color: white;
 
-  .section-title {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--white);
-  }
-
-  .achievement-count {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 12px;
-    padding: 4px 8px;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--white);
-  }
-
-  .add-btn {
-    background: rgba(255, 255, 255, 0.2);
-    border: none;
-    border-radius: 50%;
-    width: 28px;
-    height: 28px;
-    font-size: 18px;
-    color: var(--white);
+  .achievements-left {
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 8px;
+    position: relative;
+
+    .achievements-title {
+      font-size: 19px;
+      font-weight: 600;
+      color: white;
+    }
+
+    .achievement-badge {
+      --background: #6ba4ff;
+      color: #000000;
+      position: absolute;
+      top: -4px;
+      right: -22px;
+    }
+
+    .info-icon {
+      font-size: 16px;
+      color: $white5;
+    }
   }
-}
 
-// Main content section
-.main-content {
-  --background: var(--white);
+  .arrow-icon {
+    @extend .interactive-base;
+    @extend .interactive-active-scale;
+    width: 50px;
+    filter: grayscale(100%) brightness(10000%);
 
-  .content-section {
-    background: var(--white);
-    padding: 24px 20px;
-    min-height: 100%;
-  }
-}
-
-// Action cards section
-.action-cards-grid {
-  margin: 0 0 32px 0;
-  padding: 0;
-
-  .action-card {
-    background: var(--gray-light);
-    border-radius: 16px;
-    padding: 16px 12px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    min-height: 100px;
-
-    &.camping {
-      background: var(--purple-camping);
-      color: var(--white);
-    }
-
-    &.split-payment {
-      background: var(--blue-payment);
-      color: var(--white);
-    }
-
-    .card-icon {
-      width: 32px;
-      height: 32px;
-      margin-bottom: 12px;
-    }
-
-    .split-icon {
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 8px;
-      padding: 6px 12px;
-      margin-bottom: 12px;
-
-      .split-text {
-        font-size: 12px;
-        font-weight: 600;
-      }
-    }
-
-    .new-icon {
-      margin-bottom: 12px;
-
-      .bang-icon {
-        width: 28px;
-        height: 28px;
-      }
-    }
-
-    .card-content {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-
-      .card-title {
-        font-size: 13px;
-        font-weight: 500;
-        opacity: 0.9;
-      }
-
-      .card-amount {
-        font-size: 15px;
-        font-weight: 600;
-      }
+    // Custom hover for filtered image
+    &:hover {
+      transform: scale(1.1);
+      filter: grayscale(100%) brightness(8000%);
     }
   }
 }
 
-// Recent transactions section
+// Recent Transactions section
+.recent-transactions-section {
+  position: relative;
+  padding: 12px 20px;
+  color: #4d4b4b;
+}
+
 .recent-transactions-grid {
   margin: 0;
+  padding: 0 0 12px;
+
+  .recent-transactions-title {
+    font-size: 19px;
+    font-weight: 600;
+  }
+
+  .arrow-icon {
+    @extend .interactive-base;
+    @extend .interactive-hover-scale;
+    @extend .interactive-active-scale;
+    width: 50px;
+  }
+}
+
+// Transactions List
+.transactions-list-container {
+  padding: 0 20px 40px 20px;
+}
+
+.transactions-grid {
+  margin: 0;
   padding: 0;
+}
 
-  .section-header-simple {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+.transaction-item {
+  @extend .interactive-base;
+  @extend .interactive-hover-subtle;
+  @extend .interactive-active-item;
+  background: white;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  padding: 16px;
 
-    .section-title {
-      font-size: 18px;
-      font-weight: 600;
-      color: #1f2937;
-    }
-
-    .arrow-right-small {
-      width: 12px;
-      height: 12px;
-    }
+  &:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
   }
+}
 
-  .transaction-item {
-    padding: 16px 0;
-    border-bottom: 1px solid var(--gray-medium);
+.transaction-icon {
+  width: 48px;
+  margin-right: 12px;
+}
 
-    &:last-child {
-      border-bottom: none;
-    }
+.transaction-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
 
-    .transaction-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-right: 12px;
+.transaction-type {
+  font-size: 12px;
+  color: #959696;
+  font-weight: 500;
+}
 
-      &.receive {
-        background: var(--green-positive);
+.transaction-description {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
 
-        .transaction-arrow {
-          color: var(--white);
-          font-size: 20px;
-        }
-      }
+.transaction-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+}
 
-      &.payment {
-        background: var(--blue-payment);
+.transaction-card {
+  font-size: 16px;
+  color: #64748b;
+}
 
-        .payment-icon {
-          width: 20px;
-          height: 20px;
-        }
-      }
-    }
-
-    .transaction-details-col {
-      padding: 0 8px;
-    }
-
-    .transaction-details {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-
-      .transaction-type {
-        font-size: 16px;
-        font-weight: 600;
-        color: #1f2937;
-      }
-
-      .transaction-desc {
-        font-size: 14px;
-        color: var(--gray-text);
-      }
-    }
-
-    .transaction-amount {
-      font-size: 16px;
-      font-weight: 600;
-
-      &.positive {
-        color: var(--green-positive);
-      }
-
-      &.negative {
-        color: var(--red-negative);
-      }
-    }
-  }
+.transaction-amount {
+  font-size: 16px;
+  font-weight: 700;
+  text-align: right;
 }
 
 // Floating Apple Pay Button
@@ -462,7 +403,7 @@ ion-header.custom-header {
   z-index: 1000;
 
   .pay-circle {
-    background: #000;
+    background: #282727;
     border-radius: 50%;
     width: 56px;
     height: 56px;
@@ -472,7 +413,6 @@ ion-header.custom-header {
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
     cursor: pointer;
     transition: all 0.2s ease;
-    border: 3px solid var(--white); // White border to make it pop
 
     &:hover {
       transform: scale(1.05);
@@ -486,7 +426,6 @@ ion-header.custom-header {
     ion-icon {
       color: white;
       font-size: 16px;
-      margin-right: 5px;
     }
 
     .pay-text {
@@ -499,11 +438,11 @@ ion-header.custom-header {
 
 // Bottom navigation
 ion-footer {
-  --background: var(--white);
+  --background: white;
   border-top: 1px solid var(--gray-medium);
 
   ion-toolbar {
-    --background: var(--white);
+    --background: white;
     --border-width: 0;
     --padding-start: 0;
     --padding-end: 0;
@@ -514,8 +453,7 @@ ion-footer {
     padding: 0;
 
     .bottom-nav {
-      padding: 12px 0 8px 0;
-      background: var(--white);
+      background: white;
     }
   }
 
@@ -524,11 +462,13 @@ ion-footer {
     flex-direction: column;
     align-items: center;
     gap: 4px;
-    color: #9ca3af;
+    color: #bfbfc4; // Default color
     padding: 8px 4px;
+    cursor: pointer;
+    transition: color 0.2s ease;
 
-    &.active {
-      color: #5b21b6;
+    &:hover {
+      opacity: 0.8;
     }
 
     ion-icon {
@@ -544,20 +484,100 @@ ion-footer {
     &.dummy-space {
       visibility: hidden; // Takes up space but invisible
       height: 60px; // Match the height of other nav items
+      cursor: default;
     }
   }
 }
 
-// Remove default ionic padding and margins for grid
-ion-grid {
-  padding: 0;
-  margin: 0;
+
+
+// Achievements Swiper Styles
+.achievements-swiper {
+  padding-bottom: 12px;
+  overflow: hidden;
+
+  // Enable scroll snapping
+  scroll-snap-type: x mandatory;
+
+  // Add offset only to the first slide
+  swiper-slide:first-child .achievement-card {
+    margin-left: 20px;
+  }
+
+  // Configure slide snapping
+  swiper-slide {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
 }
 
-ion-row {
-  margin: 0;
+.achievement-card {
+  @extend .interactive-base;
+  @extend .interactive-hover-lift;
+  @extend .interactive-active-card;
+  border-radius: 24px;
+  height: 180px;
+  width: 160px !important;
+  position: relative;
+  overflow: hidden;
+
+  // Add offset only to the first achievement card
+  &:first-child {
+    margin-left: 20px;
+  }
+
+  // Alternative way using Angular template variable
+  &.first-slide {
+    margin-left: 20px;
+  }
 }
 
-ion-col {
-  padding: 0;
+.achievement-content {
+  padding: 24px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+
+.achievement-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.achievement-icon {
+  width: 48px;
+  object-fit: contain;
+}
+
+.forward-arrow {
+  color: $white9;
+  font-size: 24px;
+}
+
+.achievement-info {
+  .achievement-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    line-height: 1.2;
+  }
+
+  .achievement-amount {
+    font-size: 18px;
+    color: white;
+    margin: 0;
+  }
+}
+
+// Special styling for light colored achievement (third card)
+.achievement-card:has(img[alt="New"]) {
+  .forward-arrow,
+  .achievement-title,
+  .achievement-amount {
+    color: #374151;
+  }
 }

@@ -2,7 +2,7 @@
 
 <ion-content>
   <div class="content-background">
-    <div class="purple-section"></div>
+    <div class="blue-section"></div>
     <div class="white-section"></div>
   </div>
 
@@ -37,6 +37,139 @@
       </ion-row>
     </ion-grid>
   </div>
+
+  <!-- Monthly Spend Section -->
+  <div class="monthly-spend-section">
+      <ion-row class="ion-justify-content-between ion-align-items-center">
+        <ion-col size="auto">
+          <span class="spend-label">Monthly Spend</span>
+        </ion-col>
+        <ion-col size="auto">
+          <img src="assets/design/chart.png" alt="Chart" class="chart-icon" />
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-justify-content-between ion-align-items-center">
+        <ion-col size="auto">
+          <span class="spend-amount">582,23€</span>
+        </ion-col>
+        <ion-col size="auto" class="ion-align-items-center">
+          <ion-icon name="caret-up-outline" class="increase-arrow"></ion-icon>
+          <span class="spend-change">3.2%</span>
+        </ion-col>
+      </ion-row>
+  </div>
+
+  <!-- NLB Loyalty Section -->
+  <div class="loyalty-section">
+      <ion-row class="ion-justify-content-between ion-align-items-center">
+        <ion-col size="auto">
+          <ion-row class="ion-align-items-end">
+            <span class="loyalty-label">NLB Loyalty&nbsp;</span>
+            <span class="loyalty-level">level</span>
+          </ion-row>
+        </ion-col>
+        <ion-col size="auto">
+          <ion-row class="ion-align-items-center">
+            <span class="loyalty-status">standard</span>
+
+            <div class="stars">
+              <img src="assets/design/star.png" alt="Star" class="star" />
+              <img src="assets/design/star.png" alt="Star" class="star" />
+              <ion-icon name="caret-forward-outline" class="star icon" ></ion-icon>
+            </div>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+  </div>
+
+  <!-- My Achievements Section -->
+  <div class="achievements-section">
+      <ion-row class="ion-justify-content-between ion-align-items-center">
+        <ion-col size="auto">
+          <div class="achievements-left">
+            <span class="achievements-title">My Achievements</span>
+            <ion-badge color="primary" class="achievement-badge">3</ion-badge>
+          </div>
+        </ion-col>
+        <ion-col size="auto">
+            <img src="assets/design/arrow_right_outline.png" alt="Arrow" class="arrow-icon" />
+        </ion-col>
+      </ion-row>
+  </div>
+
+  <swiper-container
+    slides-per-view="1.2"
+    space-between="16"
+    centered-slides="false"
+    grab-cursor="true"
+    snap-on-release="true"
+    resistance="true"
+    resistance-ratio="0.85"
+    class="achievements-swiper"
+  >
+    @for (achievement of achievements; track achievement.id; let first = $first) {
+      <swiper-slide 
+        class="achievement-card" 
+        [style.background]="achievement.gradient"
+        [class.first-slide]="first"
+      >
+          <div class="achievement-content">
+            <div class="achievement-header">
+              <img [src]="achievement.icon" [alt]="achievement.title" class="achievement-icon" />
+              @if(achievement.hasArrow){
+                <ion-icon name="chevron-forward-outline" class="forward-arrow"></ion-icon>
+              }
+            </div>
+            <div class="achievement-info">
+              <h3 class="achievement-title">{{ achievement.title }}</h3>
+              <p class="achievement-amount">{{ achievement.amount }}</p>
+            </div>
+          </div>
+      </swiper-slide>
+    }
+  </swiper-container>
+
+  <!-- Recent Transactions Section -->
+  <div class="recent-transactions-section">
+    <ion-grid class="recent-transactions-grid">
+      <ion-row class="ion-justify-content-between ion-align-items-center">
+        <ion-col size="auto">
+          <span class="recent-transactions-title">Recent Transactions</span>
+        </ion-col>
+        <ion-col size="auto">
+          <img src="assets/design/arrow_right_outline.png" alt="Arrow" class="arrow-icon" />
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <!-- Transactions List -->
+  <div class="transactions-list-container">
+    <ion-grid class="transactions-grid">
+      @for (transaction of transactions; track transaction.id) {
+        <ion-row class="transaction-item ion-align-items-center">
+          <ion-col size="auto">
+              <img [src]="transaction.icon" [alt]="transaction.type" class="transaction-icon" />
+          </ion-col>
+          <ion-col>
+            <div class="transaction-details">
+              <span class="transaction-type">{{ transaction.type }}</span>
+              <div class="transaction-description">
+                <span class="transaction-name">{{ transaction.description }}</span>
+                <span class="transaction-card">{{ transaction.cardNumber }}</span>
+              </div>
+            </div>
+          </ion-col>
+          <ion-col size="auto">
+            <div class="transaction-amount" [style.color]="transaction.amountColor">
+              {{ transaction.amount }}
+            </div>
+          </ion-col>
+        </ion-row>
+      }
+    </ion-grid>
+  </div>
+
 </ion-content>
 
 <!-- Floating Apple Pay Button -->
@@ -51,34 +184,23 @@
   <ion-toolbar>
     <ion-grid class="bottom-nav-grid">
       <ion-row class="bottom-nav">
-        <ion-col size="2.4">
-          <div class="nav-item">
-            <ion-icon name="home"></ion-icon>
-            <span>Home</span>
-          </div>
-        </ion-col>
-        <ion-col size="2.4">
-          <div class="nav-item">
-            <ion-icon name="stats-chart"></ion-icon>
-            <span>Stats</span>
-          </div>
-        </ion-col>
-        <ion-col size="2.4">
-          <!-- Dummy/invisible space for floating button -->
-          <div class="nav-item dummy-space"></div>
-        </ion-col>
-        <ion-col size="2.4">
-          <div class="nav-item">
-            <ion-icon name="card"></ion-icon>
-            <span>My Cards</span>
-          </div>
-        </ion-col>
-        <ion-col size="2.4">
-          <div class="nav-item">
-            <ion-icon name="gift-outline"></ion-icon>
-            <span>Offers</span>
-          </div>
-        </ion-col>
+        @for (navItem of navItems; track navItem.id) {
+          <ion-col size="2.4">
+            @if (navItem.isDummy) {
+              <!-- Dummy/invisible space for floating button -->
+              <div class="nav-item dummy-space"></div>
+            } @else {
+              <div 
+                class="nav-item" 
+                (click)="onNavItemClick(navItem.id)"
+                [style.color]="getNavItemColor(navItem.id)"
+              >
+                <ion-icon [name]="navItem.icon"></ion-icon>
+                <span>{{ navItem.label }}</span>
+              </div>
+            }
+          </ion-col>
+        }
       </ion-row>
     </ion-grid>
   </ion-toolbar>

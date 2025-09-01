@@ -5,12 +5,14 @@ import { provideHttpClient } from '@angular/common/http';
 import { IonicStorageModule } from '@ionic/storage-angular';
 import { importProvidersFrom } from '@angular/core';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
+import { register as registerSwiper } from 'swiper/element/bundle';
 
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 
 // Call the element loader before bootstrapping
 defineCustomElements(window);
+registerSwiper();
 
 bootstrapApplication(AppComponent, {
   providers: [
