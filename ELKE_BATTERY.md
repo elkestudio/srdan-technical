@@ -28,7 +28,7 @@ npm run build
 ```bash
 cd ..
 # Plugin is now installed from GitHub repository:
-npm install git+https://github.com/elkestudio/elke-battery.git
+npm install file:./elke-battery
 npx cap sync
 ```
 
