@@ -231,7 +231,304 @@ platform :ios do
 end
 ```
 
-## 6. Huawei App Gallery Deployment
+## 6. Ionic Appflow Deployment
+
+### Appflow Setup and Configuration
+
+Ionic Appflow is a continuous integration and deployment platform designed specifically for Ionic applications. It provides automated builds, live updates, and deployment to app stores.
+
+#### Initial Setup
+```bash
+# Install Appflow CLI
+npm install -g @ionic/cli
+
+# Login to Appflow
+ionic login
+
+# Link your app to Appflow
+ionic link
+
+# Configure Appflow in your project
+ionic config set -g backend pro
+```
+
+#### Appflow Configuration File
+```json
+// appflow.config.json
+{
+  "apps": [
+    {
+      "appId": "your-app-id",
+      "root": "."
+    }
+  ]
+}
+```
+
+### Automated Builds with Appflow
+
+#### Web Build Configuration
+```yaml
+# Appflow web build configuration
+build:
+  web:
+    commands:
+      - npm ci
+      - ionic build --prod
+    artifacts:
+      - www/**
+```
+
+#### Native Build Configuration
+```yaml
+# Appflow native build configuration
+build:
+  android:
+    commands:
+      - npm ci
+      - ionic build --prod
+      - ionic capacitor sync android
+    environment:
+      - JAVA_VERSION=11
+      - ANDROID_SDK_VERSION=31
+    
+  ios:
+    commands:
+      - npm ci
+      - ionic build --prod
+      - ionic capacitor sync ios
+    environment:
+      - XCODE_VERSION=14.0
+```
+
+### Live Updates with Appflow
+
+#### Live Update Setup
+```bash
+# Install Appflow plugin
+npm install @ionic/pro
+
+# Configure live updates
+ionic config set app_id "your-app-id"
+ionic config set channel_tag "production"
+```
+
+#### Live Update Code Integration
+```typescript
+// src/app/app.component.ts
+import { Component } from '@angular/core';
+import { Deploy } from '@ionic/pro';
+
+@Component({
+  selector: 'app-home',
+  templateUrl: 'home.page.html'
+})
+export class HomePage {
+  
+  constructor() {
+    this.initializeApp();
+  }
+
+  async initializeApp() {
+    try {
+      const update = await Deploy.checkForUpdate();
+      if (update.available) {
+        await Deploy.downloadUpdate((progress) => {
+          console.log('Download progress:', progress);
+        });
+        await Deploy.extractUpdate();
+        await Deploy.reloadApp();
+      }
+    } catch (error) {
+      console.error('Update failed:', error);
+    }
+  }
+}
+```
+
+### Appflow Environments and Channels
+
+#### Environment Configuration
+```bash
+# Create development environment
+ionic deploy add --app-id="your-app-id" --channel="development"
+
+# Create staging environment  
+ionic deploy add --app-id="your-app-id" --channel="staging"
+
+# Create production environment
+ionic deploy add --app-id="your-app-id" --channel="production"
+```
+
+#### Channel Management
+```bash
+# Deploy to specific channel
+ionic deploy build --channel="production"
+
+# Set channel for specific commit
+ionic deploy manifest --channel="staging" --commit="abc123"
+
+# Rollback to previous version
+ionic deploy rollback --channel="production"
+```
+
+### Appflow Automation Workflows
+
+#### GitHub Integration
+```yaml
+# .github/workflows/appflow-deploy.yml
+name: Appflow Deploy
+
+on:
+  push:
+    branches: [main, develop]
+
+jobs:
+  deploy-appflow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Install Ionic CLI
+        run: npm install -g @ionic/cli
+        
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Build and deploy to Appflow
+        env:
+          IONIC_TOKEN: ${{ secrets.IONIC_TOKEN }}
+        run: |
+          ionic login --token $IONIC_TOKEN
+          ionic deploy build --channel="production"
+```
+
+#### Automated Testing with Appflow
+```bash
+# Run tests before deployment
+ionic deploy build --channel="staging" --test-command="npm test"
+
+# Deploy only if tests pass
+ionic deploy build --channel="production" --test-command="npm run test:ci"
+```
+
+### Appflow Package Builds
+
+#### Android Package Build
+```json
+{
+  "name": "Android Release Build",
+  "platform": "android",
+  "type": "release",
+  "security_profile": "production",
+  "environment": {
+    "GRADLE_ARGS": "-Pandroid.useAndroidX=true"
+  }
+}
+```
+
+#### iOS Package Build
+```json
+{
+  "name": "iOS App Store Build",
+  "platform": "ios", 
+  "type": "app-store",
+  "security_profile": "production",
+  "environment": {
+    "CODE_SIGN_STYLE": "Automatic"
+  }
+}
+```
+
+### Appflow Security Profiles
+
+#### Creating Security Profiles
+```bash
+# Create Android signing profile
+ionic package build android --security-profile android-production
+
+# Create iOS signing profile  
+ionic package build ios --security-profile ios-production
+```
+
+#### Security Profile Configuration
+```json
+{
+  "android": {
+    "keystore": "production.keystore",
+    "keystore_password": "your-keystore-password",
+    "key_alias": "production-key",
+    "key_password": "your-key-password"
+  },
+  "ios": {
+    "certificate": "ios-distribution.p12",
+    "certificate_password": "your-cert-password",
+    "provisioning_profile": "production.mobileprovision"
+  }
+}
+```
+
+### Appflow Monitoring and Analytics
+
+#### Build Monitoring
+```typescript
+// Monitor build status
+import { BuildStatus } from '@ionic/pro';
+
+async function checkBuildStatus(buildId: string) {
+  const build = await BuildStatus.get(buildId);
+  console.log('Build status:', build.status);
+  console.log('Build logs:', build.logs);
+}
+```
+
+#### Usage Analytics
+```typescript
+// Track app usage with Appflow
+import { Analytics } from '@ionic/pro';
+
+// Track custom events
+Analytics.track('feature_used', {
+  feature_name: 'camera',
+  user_type: 'premium'
+});
+
+// Track page views
+Analytics.page('home');
+```
+
+### Appflow Best Practices
+
+#### Channel Strategy
+- **Development**: For testing new features
+- **Staging**: For QA and testing before production
+- **Production**: For live app updates
+
+#### Version Management
+```bash
+# Tag releases for better tracking
+git tag -a v1.0.0 -m "Release version 1.0.0"
+git push origin v1.0.0
+
+# Deploy tagged version
+ionic deploy build --channel="production" --commit="v1.0.0"
+```
+
+#### Rollback Strategy
+```bash
+# Quick rollback to previous version
+ionic deploy rollback --channel="production"
+
+# Rollback to specific version
+ionic deploy manifest --channel="production" --commit="previous-commit-hash"
+```
+
+## 7. Huawei App Gallery Deployment
 
 ### Huawei HMS Setup
 ```bash
