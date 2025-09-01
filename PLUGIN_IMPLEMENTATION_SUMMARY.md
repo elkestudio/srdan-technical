@@ -1,104 +1,105 @@
-# Elke Battery Plugin - Kompletna Implementacija
+# Elke Battery Plugin - Complete Implementation
 
-## Pregled
+## Overview
 
-Uspešno je kreiran i implementiran custom Capacitor plugin `elke-battery` koji omogućava pristup informacijama o bateriji uređaja na Web, Android i iOS platformama.
+Successfully created and implemented a custom Capacitor plugin `elke-battery` that enables access to device battery information on Web, Android and iOS platforms.
 
-## Komande korišćene za kreiranje plugina
+## Commands used for plugin creation
 
-### 1. Kreiranje plugina
+### 1. Plugin creation
 ```bash
 cd "e:\web production new\srdan-technical"
 npm init @capacitor/plugin
-# Uneti: elke-battery kao ime plugina
+# Enter: elke-battery as plugin name
 ```
 
-### 2. Instaliranje dependencies
+### 2. Installing dependencies
 ```bash
 cd elke-battery
 npm install
 ```
 
-### 3. Build plugina
+### 3. Building the plugin
 ```bash
 npm run build
 ```
 
-### 4. Instaliranje u glavnom projektu
+### 4. Installing in main project
 ```bash
 cd ..
-npm install file:./elke-battery
+# Plugin is now installed from GitHub repository:
+npm install git+https://github.com/elkestudio/elke-battery.git
 npx cap sync
 ```
 
-## Implementirane funkcionalnosti
+## Implemented functionalities
 
-### 1. Interfejs BatteryInfo
+### 1. BatteryInfo Interface
 ```typescript
 interface BatteryInfo {
-  level: number;          // Procenat baterije (0-100)
-  isCharging: boolean;    // Da li se uređaj puni
-  isLowBattery: boolean;  // Da li je baterija slaba (< 20%)
+  level: number;          // Battery percentage (0-100)
+  isCharging: boolean;    // Whether device is charging
+  isLowBattery: boolean;  // Whether battery is low (< 20%)
   status: 'charging' | 'discharging' | 'full' | 'not_charging' | 'unknown';
 }
 ```
 
-### 2. Plugin API metode
+### 2. Plugin API methods
 ```typescript
-// Dobijanje trenutnih informacija o bateriji
+// Get current battery information
 ElkeBattery.getBatteryInfo(): Promise<BatteryInfo>
 
-// Dodavanje listener-a za promene baterije
+// Add listener for battery changes
 ElkeBattery.addBatteryListener(callback: (info: BatteryInfo) => void): Promise<string>
 
-// Uklanjanje listener-a
+// Remove listener
 ElkeBattery.removeBatteryListener(callbackId: string): Promise<void>
 ```
 
-### 3. Implementacija u Plugin Page
+### 3. Implementation in Plugin Page
 
-Plugin page (`src/app/plugin/plugin.page.ts`) implementira:
+Plugin page (`src/app/plugin/plugin.page.ts`) implements:
 
-- **Automatsko učitavanje** informacija o bateriji kada se stranica učita
-- **Real-time monitoring** promena baterije
-- **Manual refresh** funkcionalnost
-- **Error handling** sa fallback podacima
-- **Vizuelni indikatori** za status baterije (ikone i boje)
-- **Detaljni prikaz** svih informacija o bateriji
+- **Automatic loading** of battery information when page loads
+- **Real-time monitoring** of battery changes
+- **Manual refresh** functionality
+- **Error handling** with fallback data
+- **Visual indicators** for battery status (icons and colors)
+- **Detailed display** of all battery information
 
-### 4. UI komponente
+### 4. UI components
 
-Plugin page prikazuje:
+Plugin page displays:
 
-- **Battery Level**: Procenat baterije sa color-coded badge
-- **Charging Status**: Da li se uređaj puni
-- **Low Battery Warning**: Upozorenje kada je baterija ispod 20%
-- **Battery Status**: Trenutno stanje baterije
-- **Last Updated**: Vreme poslednje provere
-- **Real-time Monitoring**: Status automatskog praćenja
-- **Refresh Button**: Manual refresh funkcionalnost
-- **Plugin Information**: Informacije o pluginu
+- **Battery Level**: Battery percentage with color-coded badge
+- **Charging Status**: Whether device is charging
+- **Low Battery Warning**: Warning when battery is below 20%
+- **Battery Status**: Current battery state
+- **Last Updated**: Time of last check
+- **Real-time Monitoring**: Automatic monitoring status
+- **Refresh Button**: Manual refresh functionality
+- **Plugin Information**: Information about the plugin
 
-## Platformska implementacija
+## Platform implementation
 
 ### Web (src/web.ts)
-- Koristi Browser Battery API
-- Fallback kada API nije dostupan
-- Event listener-i za promene
+- Uses Browser Battery API
+- Fallback when API is not available
+- Event listeners for changes
 
 ### Android (android/.../ElkeBatteryPlugin.java)
-- BroadcastReceiver za ACTION_BATTERY_CHANGED
-- BatteryManager za čitanje statusa
-- Intent filter-i za power events
+- BroadcastReceiver for ACTION_BATTERY_CHANGED
+- BatteryManager for reading status
+- Intent filters for power events
 
 ### iOS (ios/.../ElkeBatteryPlugin.swift)
 - UIDevice.current.batteryState
-- NotificationCenter observer-i
+- NotificationCenter observers
 - Battery monitoring enabler
 
-## Kako ažurirati plugin
+## How to update plugin
 
-### Automatska skripta
+### Automatic script
 ```bash
 # Windows
 ./update-plugin.bat
@@ -107,72 +108,73 @@ Plugin page prikazuje:
 ./update-plugin.sh
 ```
 
-### Manualno ažuriranje
+### Manual update
 ```bash
 # 1. Build plugin
 cd elke-battery
 npm run build
 
-# 2. Reinstall u glavnom projektu
+# 2. Reinstall in main project (from GitHub)
 cd ..
-npm install file:./elke-battery --force
+npm install git+https://github.com/elkestudio/elke-battery.git --force
 
-# 3. Sync sa Capacitor
+# 3. Sync with Capacitor
 npx cap sync
 ```
 
-## Testiranje
+## Testing
 
 ### Web browser
 ```bash
 npm start
-# Ići na http://localhost:8100/tabs/plugin
+# Go to http://localhost:8100/tabs/plugin
 ```
 
 ### Android
 ```bash
-npx cap add android    # ako nije već dodato
+npx cap add android    # if not already added
 npx cap sync android
 npx cap run android
 ```
 
 ### iOS
 ```bash
-npx cap add ios        # ako nije već dodato
+npx cap add ios        # if not already added
 npx cap sync ios
 npx cap run ios
 ```
 
-## Struktura fajlova
+## File structure
 
 ```
 elke-battery/
 ├── src/
-│   ├── definitions.ts           # TypeScript interfejsi
+│   ├── definitions.ts           # TypeScript interfaces
 │   ├── index.ts                # Main entry point
-│   └── web.ts                  # Web implementacija
+│   ├── plugin.ts               # Plugin implementation logic
+│   └── web.ts                  # Web implementation
 ├── android/src/main/java/com/mycompany/plugins/example/
-│   └── ElkeBatteryPlugin.java  # Android implementacija
+│   └── ElkeBatteryPlugin.java  # Android implementation
 ├── ios/Sources/ElkeBatteryPlugin/
-│   └── ElkeBatteryPlugin.swift # iOS implementacija
+│   └── ElkeBatteryPlugin.swift # iOS implementation
 ├── package.json
 ├── tsconfig.json
 └── rollup.config.mjs
 
-glavni-projekat/
+main-project/
 ├── src/app/plugin/
-│   ├── plugin.page.ts          # Implementacija plugin-a
+│   ├── plugin.page.ts          # Plugin implementation
 │   ├── plugin.page.html        # UI template
-│   └── plugin.page.scss        # Stilovi
-├── update-plugin.bat           # Windows update skripta
-├── update-plugin.sh            # Linux/Mac update skripta
-└── ELKE_BATTERY_PLUGIN_README.md
+│   └── plugin.page.scss        # Styles
+├── update-plugin.bat           # Windows update script
+├── update-plugin.sh            # Linux/Mac update script
+└── PLUGIN_IMPLEMENTATION_SUMMARY.md
 ```
 
 ## Debugging
 
 ### Console Output
-Plugin koristi console.log za debug informacije:
+Plugin uses console.log for debug information:
 - Battery info retrieval
 - Listener start/stop
 - Error messages
@@ -180,54 +182,55 @@ Plugin koristi console.log za debug informacije:
 
 ### Common Issues
 
-1. **Plugin nije prepoznat**: 
-   - Proveriti da li je plugin property installed
-   - Pokrenuti `npm install file:./elke-battery --force`
+1. **Plugin not recognized**: 
+   - Check if plugin is properly installed
+   - Run `npm install git+https://github.com/elkestudio/elke-battery.git --force`
 
 2. **Android permissions**: 
-   - Plugin ne zahteva posebne permissions za battery API
+   - Plugin doesn't require special permissions for battery API
 
 3. **iOS simulator**: 
-   - Battery API možda neće raditi u simulator-u
-   - Testirati na fizičkom uređaju
+   - Battery API might not work in simulator
+   - Test on physical device
 
 4. **Web browser support**: 
-   - Battery API nije podržan u svim browser-ima
-   - Chrome/Edge imaju najbolju podršku
+   - Battery API is not supported in all browsers
+   - Chrome/Edge have the best support
 
 ## Production Build
 
 ```bash
-# Build glavnog projekta
+# Build main project
 npm run build
 
-# Sync sa Capacitor
+# Sync with Capacitor
 npx cap sync
 
-# Build za Android
+# Build for Android
 npx cap build android
 
-# Build za iOS
+# Build for iOS
 npx cap build ios
 ```
 
-## Source kod lokacija
+## Source code locations
 
-Kompletan source kod plugina se nalazi u:
-- `elke-battery/` direktorijum - Plugin kod
-- `src/app/plugin/` direktorijum - Implementacija u aplikaciji
-- Dokumentacija i skripte u root direktorijumu
+Complete plugin source code is located in:
+- GitHub repository: https://github.com/elkestudio/elke-battery.git
+- `src/app/plugin/` directory - Implementation in application
+- Documentation and scripts in root directory
 
-## Autor
+## Author
 
 **Srdan Topalovic**  
 GitHub: @elkestudio  
 Plugin Version: 0.0.1  
-Datum: August 31, 2025
+Date: August 31, 2025
 
-## Napomene za validaciju
+## Notes for validation
 
-- Plugin je potpuno funkcionalan na sve tri platforme
-- Source kod je spreman za rebuild i validaciju
-- Uključene su development skripte za lakše ažuriranje
-- Dokumentovane su sve potrebne komande za setup i deployment
+- Plugin is fully functional on all three platforms
+- Source code is ready for rebuild and validation
+- Development scripts included for easier updates
+- All necessary commands for setup and deployment are documented
+- Plugin is installed from GitHub repository for easier distribution and updates
